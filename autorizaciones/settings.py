@@ -1,20 +1,15 @@
 import os
 from pathlib import Path
+import dj_database_url
 
-# =====================================
-# BASE
-# =====================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DEBUG", "0") == "1"
+SECRET_KEY = os.getenv("SECRET_KEY", "clave-secreta-por-defecto")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
-CSRF_TRUSTED_ORIGINS = [o for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+ALLOWED_HOSTS = ["*", os.getenv("APP_DOMAIN", "localhost")]
+CSRF_TRUSTED_ORIGINS = [f"https://{os.getenv('APP_DOMAIN', '')}.ondigitalocean.app"]
 
-# =====================================
-# APLICACIONES
-# =====================================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'autorizaciones',
 ]
 
 MIDDLEWARE = [
@@ -40,7 +36,7 @@ ROOT_URLCONF = 'autorizaciones.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -55,29 +51,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'autorizaciones.wsgi.application'
 
-# =====================================
-# BASE DE DATOS
-# =====================================
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'defaultdb'),
-        'USER': os.getenv('DB_USER', 'doadmin'),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', '25060'),
+# ✅ Base de datos
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT'),
+            'OPTIONS': {'sslmode': os.getenv('DJANGO_DB_SSLMODE', 'require')}
+        }
+    }
 
-# SSL obligatorio para PostgreSQL en DigitalOcean
-sslmode = os.getenv('DJANGO_DB_SSLMODE', 'require')
-if sslmode:
-    DATABASES['default'].setdefault('OPTIONS', {})
-    DATABASES['default']['OPTIONS']['sslmode'] = sslmode
-
-# =====================================
-# PASSWORDS / AUTH
-# =====================================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -85,23 +78,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# =====================================
-# INTERNACIONALIZACIÓN
-# =====================================
 LANGUAGE_CODE = 'es-ar'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 USE_I18N = True
 USE_TZ = True
 
-# =====================================
-# ARCHIVOS ESTÁTICOS Y MEDIA
-# =====================================
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
-# =====================================
-# DEFAULTS
-# =====================================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
