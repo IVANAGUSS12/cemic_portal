@@ -1,24 +1,20 @@
 import os
 from pathlib import Path
-from datetime import timedelta
-from dotenv import load_dotenv
 
-load_dotenv()
-
+# =====================================
+# BASE
+# =====================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-
 DEBUG = os.getenv("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+CSRF_TRUSTED_ORIGINS = [o for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-
-
-# -------------------------------------------
-# APPS
-# -------------------------------------------
+# =====================================
+# APLICACIONES
+# =====================================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,7 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'autorizaciones',
     'core',
 ]
 
@@ -45,7 +40,7 @@ ROOT_URLCONF = 'autorizaciones.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -60,10 +55,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'autorizaciones.wsgi.application'
 
-
-# -------------------------------------------
-# DATABASE
-# -------------------------------------------
+# =====================================
+# BASE DE DATOS
+# =====================================
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -75,16 +69,15 @@ DATABASES = {
     }
 }
 
-# SSL para PostgreSQL en DO
+# SSL obligatorio para PostgreSQL en DigitalOcean
 sslmode = os.getenv('DJANGO_DB_SSLMODE', 'require')
 if sslmode:
     DATABASES['default'].setdefault('OPTIONS', {})
     DATABASES['default']['OPTIONS']['sslmode'] = sslmode
 
-
-# -------------------------------------------
-# PASSWORD VALIDATION
-# -------------------------------------------
+# =====================================
+# PASSWORDS / AUTH
+# =====================================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -92,38 +85,23 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# -------------------------------------------
-# INTERNATIONALIZATION
-# -------------------------------------------
+# =====================================
+# INTERNACIONALIZACIÓN
+# =====================================
 LANGUAGE_CODE = 'es-ar'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 USE_I18N = True
 USE_TZ = True
 
-
-# -------------------------------------------
-# STATIC & MEDIA FILES
-# -------------------------------------------
+# =====================================
+# ARCHIVOS ESTÁTICOS Y MEDIA
+# =====================================
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# -------------------------------------------
+# =====================================
 # DEFAULTS
-# -------------------------------------------
+# =====================================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# -------------------------------------------
-# LOGGING
-# -------------------------------------------
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {'console': {'class': 'logging.StreamHandler'}},
-    'root': {'handlers': ['console'], 'level': 'INFO'},
-}
