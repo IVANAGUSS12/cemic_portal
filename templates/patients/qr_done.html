@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+{% block title %}Solicitud enviada{% endblock %}
+{% block body %}
+<div class="wrap">
+  <div class="card" style="max-width:680px;margin:0 auto;padding:20px">
+    <h2 style="margin:0 0 6px;color:#064427">¡Solicitud enviada!</h2>
+    <p>Recibimos tu documentación. Te contactaremos si hace falta información adicional.</p>
+    <a class="btn" href="{% url 'qr_form' %}" style="margin-top:10px;display:inline-block">Cargar otra</a>
+  </div>
+</div>
+{% endblock %}

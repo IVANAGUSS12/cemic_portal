@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Estadísticas{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Estadísticas</h2>
+    <p class="card-sub">Distribución por estado y por sector.</p>
+  </div>
+  <div class="card-body">
+    <div style="max-width:980px;margin-bottom:24px">
+      <canvas id="chart1" height="160"></canvas>
+    </div>
+    <div style="max-width:980px">
+      <canvas id="chart2" height="160"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // Ojo: default necesita 2 args -> default:"{}"
+  const byEstado = {{ by_estado|default:"{}"|safe }};
+  const bySector = {{ by_sector|default:"{}"|safe }};
+
+  new Chart(document.getElementById('chart1'), {
+    type: 'bar',
+    data: { labels: Object.keys(byEstado), datasets: [{ label: 'Por estado', data: Object.values(byEstado) }] },
+  });
+
+  new Chart(document.getElementById('chart2'), {
+    type: 'bar',
+    data: { labels: Object.keys(bySector), datasets: [{ label: 'Por sector', data: Object.values(bySector) }] },
+  });
+</script>
+{% endblock %}

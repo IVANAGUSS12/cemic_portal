@@ -1,0 +1,61 @@
+<div class="drawer-backdrop" onclick="document.getElementById('drawer').innerHTML=''"></div>
+<div class="drawer-panel">
+  <div class="drawer-head">
+    <div>
+      <h3>{{ s.nombre }} <small>• DNI {{ s.dni }}</small></h3>
+      <div class="meta">
+        <span class="badge sector">{{ s.sector }}</span>
+        <span class="badge state">{{ s.estado }}</span>
+        <span class="muted">{{ s.cobertura }}</span>
+        {% if s.fecha_cx %}<span class="muted">| {{ s.fecha_cx|date:"d/m/Y" }}</span>{% endif %}
+      </div>
+    </div>
+    <button class="icon" onclick="document.getElementById('drawer').innerHTML=''">✕</button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="grid2">
+      <div class="field">
+        <label>Médico</label>
+        <div>{{ s.medico|default:"—" }}</div>
+      </div>
+      <div class="field">
+        <label>Teléfono</label>
+        <div>{{ s.telefono|default:"—" }}</div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <div>{{ s.email|default:"—" }}</div>
+      </div>
+      <div class="field">
+        <label>Observaciones</label>
+        <div class="note">{{ s.observaciones|default:"—" }}</div>
+      </div>
+    </div>
+
+    <h4>Adjuntos</h4>
+    <div class="files-grid">
+      {% if s.orden_medica %}
+        <a class="file-card" href="{{ s.orden_medica.url }}" target="_blank">Orden médica</a>
+      {% endif %}
+      {% if s.dni_file %}
+        <a class="file-card" href="{{ s.dni_file.url }}" target="_blank">DNI</a>
+      {% endif %}
+      {% if s.credencial %}
+        <a class="file-card" href="{{ s.credencial.url }}" target="_blank">Credencial</a>
+      {% endif %}
+      {% if s.orden_materiales %}
+        <a class="file-card" href="{{ s.orden_materiales.url }}" target="_blank">Orden materiales</a>
+      {% endif %}
+      {% if not s.orden_medica and not s.dni_file and not s.credencial and not s.orden_materiales %}
+        <div class="muted">Sin archivos adjuntos.</div>
+      {% endif %}
+    </div>
+
+    {% if s.subcarpeta_url %}
+      <div class="subcarpeta">
+        <a class="btn ghost" href="{{ s.subcarpeta_url }}" target="_blank">Abrir carpeta del paciente</a>
+      </div>
+    {% endif %}
+  </div>
+</div>

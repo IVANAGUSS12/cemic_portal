@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}CEMIC - Panel{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body style="margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+  <div style="display:flex;min-height:100vh">
+    <nav style="width:220px;background:#013d34;color:#fff;padding:16px">
+      <h3 style="margin:0 0 12px 0">CEMIC · Panel</h3>
+      <div style="font-size:12px;margin-bottom:16px">
+        <strong>{{ request.user.username|default:"Usuario" }}</strong><br>
+        {{ request.user.email|default:"" }}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'panel' %}" style="color:#fff;text-decoration:none">Servicios</a>
+        <a href="{% url 'calendar' %}" style="color:#fff;text-decoration:none">Calendario</a>
+        <a href="{% url 'stats' %}" style="color:#fff;text-decoration:none">Estadísticas</a>
+        <a href="{% url 'qr_form' %}" style="color:#fff;text-decoration:none">Formulario QR</a>
+        <a href="{% url 'logout_view' %}" style="color:#fff;text-decoration:none;background:#c33;padding:6px 8px;border-radius:6px;display:inline-block;margin-top:8px">Salir</a>
+      </div>
+    </nav>
+    <main style="flex:1;padding:24px">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

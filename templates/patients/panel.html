@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Servicios{% endblock %}
+{% block content %}
+  <h1>Solicitudes / Servicios</h1>
+  <p>Smoke test OK. Si ves esto, las plantillas están cargando.</p>
+
+  {% if rows %}
+    <ul>
+      {% for r in rows %}
+        <li>#{{ r.id }} — {{ r.nombre }} — {{ r.cobertura }} — {{ r.sector }} — {{ r.fecha_cx }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay registros.</p>
+  {% endif %}
+{% endblock %}

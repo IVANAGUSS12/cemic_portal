@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Formulario QR{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header"><h2 class="card-title">Oficina Virtual de Autorizaciones</h2></div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data" class="qr-form">
+      {% csrf_token %}
+
+      <div class="grid2">
+        <label>Nombre {{ form.nombre }}</label>
+        <label>DNI {{ form.dni }}</label>
+        <label>Email {{ form.email }}</label>
+        <label>Teléfono {{ form.telefono }}</label>
+        <label>Cobertura {{ form.cobertura }}</label>
+        <label>Médico {{ form.medico }}</label>
+        <label>Fecha cirugía {{ form.fecha_cx }}</label>
+        <label>Sector {{ form.sector }}</label>
+      </div>
+
+      <label>Observaciones {{ form.observaciones }}</label>
+
+      <div class="files">
+        <div>Orden médica: {{ form.orden_medica }}</div>
+        <div>DNI: {{ form.dni_file }}</div>
+        <div>Credencial: {{ form.credencial }}</div>
+        <div>Orden materiales: {{ form.orden_materiales }}</div>
+      </div>
+
+      <div class="muted">Formatos: JPG/PNG/PDF. Máx. 15 MB por archivo.</div>
+      <button class="btn" type="submit">Enviar solicitud</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

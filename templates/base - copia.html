@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEMIC - Panel</title>
+
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fbfb;
+            color: #222;
+        }
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background-color: #013d34;
+            color: white;
+            width: 210px;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h1 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin: 0.4rem 0;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar .user {
+            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+        }
+        .main {
+            flex: 1;
+            padding: 2rem;
+        }
+        header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logout {
+            background: #e14c4c;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .logout:hover {
+            background: #c33;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <h1>CEMIC · Panel</h1>
+            <div class="user">
+                <strong>{{ request.user.username|title }}</strong><br>
+                {{ request.user.email }}
+            </div>
+            <a href="{% url 'panel' %}">Servicios</a>
+            <a href="{% url 'calendar' %}">Calendario</a>
+            <a href="{% url 'stats' %}">Estadísticas</a>
+            <a href="{% url 'qr_form' %}">Formulario QR</a>
+            <a href="{% url 'logout_view' %}" class="logout">Salir</a>
+        </nav>
+
+        <main class="main">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</body>
+</html>
