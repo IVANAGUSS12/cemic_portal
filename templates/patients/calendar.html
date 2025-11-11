@@ -1,70 +1,7 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Calendario · CEMIC{% endblock %}
-
+{% block title %}Calendario{% endblock %}
+{% block header %}Calendario{% endblock %}
 {% block content %}
-<div class="page">
-  <div class="page-head">
-    <h1 class="page-title">Calendario de cirugías</h1>
-    <div class="page-actions">
-      <a class="btn" href="?y={{ prev_y }}&m={{ prev_m }}">← Anterior</a>
-      <div class="badge">{{ month_name }} {{ y }}</div>
-      <a class="btn" href="?y={{ next_y }}&m={{ next_m }}">Siguiente →</a>
-    </div>
-  </div>
-
-  <div class="cal">
-    <div class="cal-header">
-      <div>Lu</div><div>Ma</div><div>Mi</div><div>Ju</div><div>Vi</div><div>Sa</div><div>Do</div>
-    </div>
-
-    {% for wk in weeks %}
-      <div class="cal-row">
-        {% for d in wk %}
-          {% if d %}
-            {% with iso=d|date:"Y-m-d" %}
-              <a class="cal-cell" href="{% url 'day' iso=iso %}">
-                <div class="cal-day">{{ d.day }}</div>
-                {% if counts.d %}
-                  <div class="cal-dot">{{ counts.d }}</div>
-                {% else %}
-                  {% with cnt=counts|default_if_none:0 %}
-                  {% endwith %}
-                  {% if counts.d == None and counts.d != 0 %}
-                    {% if counts|get_item:d %}
-                      <div class="cal-dot">{{ counts|get_item:d }}</div>
-                    {% endif %}
-                  {% endif %}
-                {% endif %}
-                {% if counts|get_item:d %}
-                  <div class="cal-dot">{{ counts|get_item:d }}</div>
-                {% endif %}
-              </a>
-            {% endwith %}
-          {% else %}
-            <div class="cal-cell -empty"></div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<style>
-.page{padding:16px}
-.page-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.page-title{margin:0;font-size:20px}
-.page-actions{display:flex;align-items:center;gap:10px}
-.btn{padding:6px 10px;border-radius:8px;background:#0e4a3e;color:#fff;text-decoration:none}
-.badge{padding:6px 10px;background:#e8f3f0;border-radius:8px}
-.cal{border:1px solid #e6e6e6;border-radius:12px;overflow:hidden;background:#fff}
-.cal-header,.cal-row{display:grid;grid-template-columns:repeat(7,1fr)}
-.cal-header>div{background:#f7f7f7;padding:10px;text-align:center;font-weight:600;border-right:1px solid #eee}
-.cal-header>div:last-child{border-right:none}
-.cal-row .cal-cell{min-height:90px;border-top:1px solid #eee;border-right:1px solid #eee;padding:8px;position:relative;text-decoration:none;color:inherit}
-.cal-row .cal-cell:last-child{border-right:none}
-.cal-row .cal-cell.-empty{background:#fafafa}
-.cal-day{font-weight:600;opacity:.75}
-.cal-dot{position:absolute;right:8px;bottom:8px;background:#0e4a3e;color:#fff;border-radius:999px;min-width:22px;line-height:22px;text-align:center;font-size:12px;padding:0 6px}
-</style>
+<div class="muted">El calendario interactivo se completará con /api/day/AAAA-MM-DD.</div>
+<div id="calendar-placeholder" class="card">UI de calendario pendiente.</div>
 {% endblock %}

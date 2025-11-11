@@ -1,18 +1,20 @@
-
-{% extends "base.html" %}
-{% block title %}Ingresar · CEMIC{% endblock %}
-{% block body %}
-<div class="wrap">
-  <div class="card" style="max-width:520px;margin:40px auto;padding:20px">
-    <h2 style="margin:0 0 8px 0">Ingresar</h2>
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingresar</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <style>.login-card{max-width:420px;margin:10vh auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.1)}</style>
+</head>
+<body class="login">
+  <div class="login-card">
+    <h1>Iniciar sesión</h1>
     <form method="post">{% csrf_token %}
-      <div style="display:grid;gap:10px">
-        <input class="input" type="text" name="username" placeholder="Usuario">
-        <input class="input" type="password" name="password" placeholder="Contraseña">
-        <button class="btn" type="submit">Entrar</button>
-      </div>
+      {{ form.as_p }}
+      <button class="btn" type="submit">Entrar</button>
     </form>
-    {% if form.errors %}<div class="muted" style="margin-top:8px">Usuario o contraseña inválidos.</div>{% endif %}
   </div>
-</div>
-{% endblock %}
+</body>
+</html>

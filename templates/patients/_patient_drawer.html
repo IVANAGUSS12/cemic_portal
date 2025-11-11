@@ -1,61 +1,75 @@
-<div class="drawer-backdrop" onclick="document.getElementById('drawer').innerHTML=''"></div>
-<div class="drawer-panel">
-  <div class="drawer-head">
-    <div>
-      <h3>{{ s.nombre }} <small>• DNI {{ s.dni }}</small></h3>
-      <div class="meta">
-        <span class="badge sector">{{ s.sector }}</span>
-        <span class="badge state">{{ s.estado }}</span>
-        <span class="muted">{{ s.cobertura }}</span>
-        {% if s.fecha_cx %}<span class="muted">| {{ s.fecha_cx|date:"d/m/Y" }}</span>{% endif %}
-      </div>
-    </div>
-    <button class="icon" onclick="document.getElementById('drawer').innerHTML=''">✕</button>
-  </div>
+<!-- NOTA: Este archivo es el cuerpo de la respuesta HTMX, NO debe extender base.html -->
 
-  <div class="drawer-body">
-    <div class="grid2">
-      <div class="field">
-        <label>Médico</label>
-        <div>{{ s.medico|default:"—" }}</div>
-      </div>
-      <div class="field">
-        <label>Teléfono</label>
-        <div>{{ s.telefono|default:"—" }}</div>
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <div>{{ s.email|default:"—" }}</div>
-      </div>
-      <div class="field">
-        <label>Observaciones</label>
-        <div class="note">{{ s.observaciones|default:"—" }}</div>
-      </div>
+<!-- Contenedor interno del drawer, este es el que se muestra/oculta y contiene el contenido -->
+<div class="bg-white h-full p-6 shadow-2xl relative">
+    
+    <!-- Botón para cerrar el Drawer -->
+    <button hx-on:click="closeDrawer()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition duration-150">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+    
+    <div class="pb-4 border-b border-gray-100">
+        <h3 class="text-2xl font-extrabold text-gray-900">Detalle de Solicitud #{{ patient.id }}</h3>
+        <p class="text-lg text-blue-600 font-medium mt-1">{{ patient.nombre }}</p>
     </div>
 
-    <h4>Adjuntos</h4>
-    <div class="files-grid">
-      {% if s.orden_medica %}
-        <a class="file-card" href="{{ s.orden_medica.url }}" target="_blank">Orden médica</a>
-      {% endif %}
-      {% if s.dni_file %}
-        <a class="file-card" href="{{ s.dni_file.url }}" target="_blank">DNI</a>
-      {% endif %}
-      {% if s.credencial %}
-        <a class="file-card" href="{{ s.credencial.url }}" target="_blank">Credencial</a>
-      {% endif %}
-      {% if s.orden_materiales %}
-        <a class="file-card" href="{{ s.orden_materiales.url }}" target="_blank">Orden materiales</a>
-      {% endif %}
-      {% if not s.orden_medica and not s.dni_file and not s.credencial and not s.orden_materiales %}
-        <div class="muted">Sin archivos adjuntos.</div>
-      {% endif %}
+    <!-- Sección de Información -->
+    <div class="mt-6 space-y-4">
+        
+        <div class="flex justify-between items-start border-b border-gray-100 pb-3">
+            <span class="text-sm font-medium text-gray-500">Estado Actual:</span>
+            <span class="text-sm font-semibold">
+                {% if patient.estado == 'Aprobado' %}
+                    <span class="badge state-ok">{{ patient.estado }}</span>
+                {% elif patient.estado == 'Pendiente' %}
+                    <span class="badge state-pendiente">{{ patient.estado }}</span>
+                {% else %}
+                    <span class="badge state-rechazado">{{ patient.estado }}</span>
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="flex justify-between border-b border-gray-100 pb-3">
+            <span class="text-sm font-medium text-gray-500">DNI:</span>
+            <span class="text-sm font-semibold text-gray-800">{{ patient.dni }}</span>
+        </div>
+
+        <div class="flex justify-between border-b border-gray-100 pb-3">
+            <span class="text-sm font-medium text-gray-500">Cobertura:</span>
+            <span class="text-sm font-semibold text-gray-800">{{ patient.cobertura }}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-gray-100 pb-3">
+            <span class="text-sm font-medium text-gray-500">Fecha Cirugía:</span>
+            <span class="text-sm font-semibold text-gray-800">{{ patient.fecha_cx|date:"d/m/Y" }}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-gray-100 pb-3">
+            <span class="text-sm font-medium text-gray-500">Médico Tratante:</span>
+            <span class="text-sm font-semibold text-gray-800">{{ patient.medico }}</span>
+        </div>
+
+        <div class="pt-2">
+            <h4 class="text-sm font-bold text-gray-700 mb-2">Adjuntos:</h4>
+            <div class="flex flex-wrap gap-2">
+                {% if patient.orden_medica %}<a href="{% url 'download_file' patient.id 'om' %}" class="file hover:bg-blue-700">Orden Médica</a>{% endif %}
+                {% if patient.dni_file %}<a href="{% url 'download_file' patient.id 'dni' %}" class="file hover:bg-blue-700">DNI</a>{% endif %}
+                {% if patient.credencial %}<a href="{% url 'download_file' patient.id 'cred' %}" class="file hover:bg-blue-700">Credencial</a>{% endif %}
+                {% if patient.orden_materiales %}<a href="{% url 'download_file' patient.id 'mat' %}" class="file hover:bg-blue-700">Mat.</a>{% endif %}
+            </div>
+        </div>
+
     </div>
 
-    {% if s.subcarpeta_url %}
-      <div class="subcarpeta">
-        <a class="btn ghost" href="{{ s.subcarpeta_url }}" target="_blank">Abrir carpeta del paciente</a>
-      </div>
-    {% endif %}
-  </div>
+    <!-- Acciones -->
+    <div class="absolute bottom-6 left-0 right-0 px-6 pt-4 border-t border-gray-100 flex justify-end gap-3">
+        <button class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition duration-150 text-sm">
+            Rechazar
+        </button>
+        <button class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition duration-150 text-sm">
+            Aprobar
+        </button>
+    </div>
 </div>

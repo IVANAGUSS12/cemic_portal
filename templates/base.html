@@ -1,31 +1,38 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}CEMIC - Panel{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CEMIC{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
-<body style="margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
-  <div style="display:flex;min-height:100vh">
-    <nav style="width:220px;background:#013d34;color:#fff;padding:16px">
-      <h3 style="margin:0 0 12px 0">CEMIC · Panel</h3>
-      <div style="font-size:12px;margin-bottom:16px">
-        <strong>{{ request.user.username|default:"Usuario" }}</strong><br>
-        {{ request.user.email|default:"" }}
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="avatar">{{ request.user.username|default:"CEMIC"|slice:":2"|upper }}</div>
+      <div>
+        <div class="brand-title">CEMIC · Panel</div>
+        <div class="brand-sub">{{ request.user.get_username }}</div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <a href="{% url 'panel' %}" style="color:#fff;text-decoration:none">Servicios</a>
-        <a href="{% url 'calendar' %}" style="color:#fff;text-decoration:none">Calendario</a>
-        <a href="{% url 'stats' %}" style="color:#fff;text-decoration:none">Estadísticas</a>
-        <a href="{% url 'qr_form' %}" style="color:#fff;text-decoration:none">Formulario QR</a>
-        <a href="{% url 'logout_view' %}" style="color:#fff;text-decoration:none;background:#c33;padding:6px 8px;border-radius:6px;display:inline-block;margin-top:8px">Salir</a>
-      </div>
+    </div>
+    <nav class="nav">
+      <a href="{% url 'panel' %}">Servicios</a>
+      <a href="{% url 'calendar' %}">Calendario</a>
+      <a href="{% url 'stats' %}">Estadísticas</a>
+      <a href="{% url 'qr' %}">Formulario QR</a>
+      <a class="logout" href="{% url 'logout' %}">Salir</a>
     </nav>
-    <main style="flex:1;padding:24px">
-      {% block content %}{% endblock %}
-    </main>
-  </div>
+  </aside>
+
+  <main class="content">
+    <header class="page-header">
+      <h1 class="page-title">{% block header %}{% endblock %}</h1>
+    </header>
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
 </body>
 </html>

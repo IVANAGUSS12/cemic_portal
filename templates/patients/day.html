@@ -1,38 +1,19 @@
-{% extends "base.html" %}
-{% block title %}{{ iso }} · CEMIC{% endblock %}
-
-{% block content %}
-<h1 class="page-title">Cirugías del {{ iso }}</h1>
-
-{% if rows %}
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>Paciente</th><th>DNI</th><th>Cobertura</th>
-        <th>Médico</th><th>Sector</th><th>Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in rows %}
+<table class="table">
+  <thead>
+    <tr><th>Nombre</th><th>DNI</th><th>Sector</th><th>Médico</th><th>Cobertura</th><th>Estado</th></tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
       <tr>
         <td>{{ r.nombre }}</td>
         <td>{{ r.dni }}</td>
-        <td>{{ r.cobertura }}</td>
-        <td>{{ r.medico }}</td>
         <td>{{ r.sector }}</td>
+        <td>{{ r.medico }}</td>
+        <td>{{ r.cobertura }}</td>
         <td>{{ r.estado }}</td>
       </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% else %}
-  <p>No hay registros para esta fecha.</p>
-{% endif %}
-
-<style>
-.page-title{margin:10px 0 14px}
-.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid #eee;border-radius:10px;overflow:hidden}
-.tbl th,.tbl td{padding:10px;border-bottom:1px solid #eee}
-.tbl thead th{background:#f7f7f7;text-align:left}
-</style>
-{% endblock %}
+    {% empty %}
+      <tr><td colspan="6">Sin turnos para {{ iso }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>

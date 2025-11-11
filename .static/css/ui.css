@@ -1,0 +1,84 @@
+:root{
+  --bg:#f7f7fb; --card:#fff; --text:#0f172a; --muted:#64748b; --brand:#4f46e5;
+  --brand-600:#4f46e5; --brand-700:#4338ca; --ring:rgba(79,70,229,.25);
+  --border:#e5e7eb; --table-stripe:#fbfbfd; --danger:#dc2626; --ok:#16a34a; --info:#0ea5e9;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,Segoe UI,Roboto,Helvetica,Arial}
+
+/* Layout básicos que ya usás */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 24px rgba(2,6,23,.06);overflow:hidden}
+.card-header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-title{margin:0;font-size:20px;font-weight:700}
+.card-sub{margin:0;color:var(--muted);font-size:13px}
+.card-body{padding:18px 20px}
+
+/* Filtros */
+form.filters{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);background:#fafafa}
+@media (max-width:1100px){form.filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){form.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+form.filters input[type="text"],
+form.filters input[type="date"],
+form.filters select{
+  border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff;outline:none;width:100%
+}
+form.filters input:focus, form.filters select:focus{box-shadow:0 0 0 4px var(--ring);border-color:var(--brand-600)}
+
+.btn{
+  appearance:none;border:1px solid var(--border);background:#fff;border-radius:10px;
+  padding:8px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  color:#111827;font-weight:500;white-space:nowrap
+}
+.btn:hover{border-color:#d1d5db}
+.btn.ghost{background:transparent}
+.btn.info{background:#e0f2fe;border-color:#bae6fd;color:#075985}
+.btn.primary{background:var(--brand-600);color:#fff;border-color:transparent}
+.btn.primary:hover{background:var(--brand-700)}
+
+/* Tabla */
+.table-wrap{overflow:auto;border-radius:12px;border:1px solid var(--border)}
+.table{width:100%;border-collapse:separate;border-spacing:0;min-width:900px}
+.table thead th{
+  position:sticky;top:0;background:#f8fafc;color:#0f172a;text-align:left;font-weight:700;font-size:13px;
+  padding:12px;border-bottom:1px solid var(--border)
+}
+.table tbody td{padding:12px;vertical-align:top;border-bottom:1px solid var(--border);font-size:14px}
+.table tbody tr:nth-child(odd){background:var(--table-stripe)}
+.table tbody tr:hover{background:#eef2ff55}
+
+tr.clickable{cursor:pointer}
+
+/* Badges y chips */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid;
+}
+.badge.sector{background:#f3f4f6;border-color:var(--border);color:#111827}
+.badge.state{background:#ecfdf5;border-color:#bbf7d0;color:#065f46}
+.badge.state[data-state="Rechazado"]{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.badge.state[data-state="Pendiente"]{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+
+/* Adjuntos */
+.file{display:inline-flex;align-items:center;justify-content:center;height:24px;min-width:32px;padding:0 8px;
+  border-radius:8px;background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;font-weight:600;font-size:12px;margin-right:6px}
+
+/* Paginado y estado vacío */
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.pager span{color:var(--muted);font-size:13px}
+
+.empty{padding:26px;border:2px dashed var(--border);border-radius:12px;background:#fafafa;text-align:center}
+.empty p{margin:0 0 12px 0;color:var(--muted)}
+
+/* Drawer lateral para HTMX */
+#drawer{
+  position:fixed;top:0;right:0;height:100vh;width:440px;max-width:90vw;background:#fff;border-left:1px solid var(--border);
+  box-shadow:-16px 0 32px rgba(2,6,23,.08);transform:translateX(100%);transition:transform .28s ease;z-index:60;overflow:auto
+}
+#drawer.open{transform:translateX(0)}
+/* Overlay opcional */
+#drawer-backdrop{
+  content:"";position:fixed;inset:0;background:rgba(2,6,23,.35);backdrop-filter:saturate(140%) blur(2px);
+  opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:50
+}
+#drawer-backdrop.show{opacity:1;pointer-events:auto}
